@@ -44,7 +44,7 @@ const sketch = ({ width, height }) => {
   gradientContext.fillStyle = fill;
   gradientContext.fillRect(0, 0, width, height);
 
-  return TNG(({ canvas, context }) => {
+  const render = TNG(({ canvas, context }) => {
     const mouse = useMouse({ canvas, width, height });
     const imageData = gradientContext.getImageData(mouse.x, mouse.y, 1, 1);
     context.fillStyle = `rgb(${imageData.data[0]},${imageData.data[1]},${
@@ -52,6 +52,14 @@ const sketch = ({ width, height }) => {
     })`;
     context.fillRect(0, 0, width, height);
   });
+
+  return {
+    render,
+    unload() {
+      // trigger pending cleanup functions and reset TNG hooks-context
+      render.reset();
+    }
+  };
 };
 
 canvasSketch(sketch, settings);

@@ -22,7 +22,12 @@ function useMouse({ canvas, width, height }) {
         event: e
       });
     }
+
     canvas.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      canvas.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   return mouse;
